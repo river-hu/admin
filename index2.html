@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>标题</title>
+    <link rel="stylesheet" href="js/bootstrap.css">
+    <link rel="stylesheet" href="index2.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-form.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+    <div class="ttop"> <img src="logo2.png"> <span>后台管理系统</span> </div>
+    <div class="box" v-cloak>
+        <div class="panel panel-primary">
+            <!-- Default panel contents -->
+            <ul class="list-group" v-for="(item,index) in dat">
+                <li class="list-group-item" :class="{active:item.off}" @click="open(index)">{{item.name}} <span class="badge">{{item.set}}</span></li>
+                <li class="list-group-item active1" v-for="ite in item.content" @click="home(ite.id)"><a href="javascript:;">{{ite.list}}</a></li>
+            </ul>
+        </div>
+        <ol class="breadcrumb">
+            <li class="active">当前位置</li>
+            <li class="two"><a href="#">{{lu.one}}</a></li>
+            <li class="active">{{lu.two}}</li>
+        </ol>
+
+        <transition name="fade">
+            <div class="container list" v-if="off[0].off">
+                <div class="left">
+                    <table class="table table-striped  table-hover">
+                        <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>分类</th>
+                                <th>标题</th>
+                                <th>简介</th>
+                                <th>详情页地址</th>
+                                <th>图片</th>
+                                <th>价钱</th>
+                                <th>排序</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item,index) in dis">
+                                <td>{{item.id}}</td>
+                                <td>{{sortid(item.sort_id)}}</td>
+                                <td>{{item.title}}</td>
+                                <td>{{item.des}}</td>
+                                <td>{{item.url}}</td>
+                                <td> <img :src="'../'+item.pic" alt=""></td>
+                                <td>{{item.price}}</td>
+                                <td>{{item.ord}}</td>
+
+                                <td>
+                                    <button type="button" class="btn btn-info" @click="set(index)">编辑</button>
+
+                                    <button class="btn btn-danger" @click="del(index,item.id)">删除</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li>
+                                <a href="#" aria-label="Previous" @click="prepage">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+                            </li>
+                            <li v-for="item in num" :class="{active:page==item}"><a href="#" @click="fen(item)">{{item}}</a></li>
+                            <li>
+                                <a href="#" aria-label="Next" @click="nextpage">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </transition>
+        <transition name="fade">
+            <div class=" setp" v-if="off[1].off">
+                <div class="col-md-10 body1">
+                    <h2>修改商品</h2>
+                    <div class="col-md-5">
+                        <form @submit="doSubmit" action="upsetp.php" class="form-horizontal" id="updata" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="id" v-model="x.id">
+                            <div class="form-group">
+                                <label for="inputEmail" class="col-sm-3 control-label">商品名字</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputEmail" name="title" v-model="x.title">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail1" class="col-sm-3 control-label">商品简介</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputEmail1" name="des" v-model="x.des">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword3" class="col-sm-3 control-label">详情页</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputPassword3" name="url" v-model="x.url">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword31" class="col-sm-3 control-label">商品价格</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputPassword31" name="price" v-model="x.price">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPasword31" class="col-sm-3 control-label">商品排序</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputPasword31" name="ord" v-model="x.ord">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputFile" class="col-sm-3 control-label">商品图片</label>
+                                <div class="col-sm-9">
+                                    <img src="" alt="">
+                                    <input type="file" id="file" name="file" />
+                                    <span id="mydiv" style="display:inline-block;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-10">
+                                    <button type="submit" class="btn btn-info" @click="ctrls()">立即修改</button>
+                                    <button type="button" class="btn btn-info " @click="back"> 返回 </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </transition>
+        <transition name="fade">
+            <div class="inset" v-if="off[2].off">
+                <div class="col-md-10 body1">
+                    <h2>增加商品</h2>
+                    <div class="col-md-5">
+                        <form class="form-horizontal" id="inset" @submit="doSubmit" method="post" action="insetp.php" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="sort" class="col-sm-3 control-label">商品分类</label>
+                                <div class="col-sm-9">
+                                    <select name="sort" id="sort" v-model="x.sort">  
+
+                                        <option v-for="item in sort" :value="item.sort_id">{{item.sort_name}}</option>                             
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail" class="col-sm-3 control-label">商品名字</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputEmail" name="title" v-model="x.title" placeholder="商品名字">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail1" class="col-sm-3 control-label">商品简介</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputEmail1" name="des" v-model="x.des" placeholder="商品简介">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword3" class="col-sm-3 control-label">详情页</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputPassword3" name="url" v-model="x.url" placeholder="详情页地址">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword31" class="col-sm-3 control-label">商品价格</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputPassword31" name="price" v-model="x.price" placeholder="商品价格">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputFile" class="col-sm-3 control-label">商品图片</label>
+                                <div class="col-sm-9">
+                                    <input type="file" id="file" name="file" />
+                                    <span id="mydiv" style="display:inline-block;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-10">
+                                    <button type="submit" class="btn btn-info" @click="inset">立即添加</button>
+                                    <button type="button" class="btn btn-info" @click="back">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+
+                        <br>
+                    </div>
+
+                </div>
+            </div>
+        </transition>
+        <transition name="fade">
+            <div class="sortt" v-if="off[3].off">
+                <table class="table table-striped  table-hover">
+                    <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>分类</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item,index) in sort">
+
+                            <td>{{item.sort_id }}</td>
+                            <td v-show="sortset">{{item.sort_name}}</td>
+
+                            <td v-show="sortset">
+                                <button type="button" class="btn btn-info" @click="sortsetfun">编辑</button>
+                                <button type="button" class="btn btn-danger" @click="back">删除</button>
+                            </td>
+
+                            <td v-show="!sortset"><input type="text" style="80%" v-model="item.sort_name"></td>
+
+                            <td v-show="!sortset">
+                                <button type="button" class="btn btn-info" @click="sortctrl">保存</button>
+                                <button type="button" class="btn btn-danger" @click="sortsetfun">取消</button>
+                            </td>
+
+                        </tr>
+                        <tr v-show="add.dis">
+                            <td>{{sort.length+1}}</td>
+                            <td><input type="text" style="80%" v-model="add.name"></td>
+                            <td>
+                                <button type="button" class="btn btn-info" @click="addctrl(sort.length+1)">保存</button>
+                                <button type="button" class="btn btn-danger" @click="addback">取消</button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <button class="btn-danger btn" style="width:90%" @click="addfun">+</button>
+                            </td>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+        </transition>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: ".box",
+            data: {
+                gd: true,
+                dat: [
+                    {
+                        name: "商品管理",
+                        off: true,
+                        content: [
+                            { list: "商品列表", id: 0 },
+                            { list: "商品增加", id: 2 },
+                            { list: "商品分类", id: 3 },
+                        ],
+                        set: "+"
+                    },
+                    {
+                        name: "账户管理",
+                        off: false,
+                        content: [
+                            { list: "管理员列表", id: 4 },
+                            { list: "修改密码", id: 5 },
+                        ],
+                        set: "+"
+                    },
+                    {
+                        name: "系统管理",
+                        off: false,
+                        content: [
+                            { list: "退出登录", id: 6 },
+                        ],
+                        set: "+"
+                    }
+                ],
+                ind: 0,
+                mydata: '',
+                dis: [],
+                sort: '',
+                dd: null,
+                off: [
+                    { off: true, content: "商品列表" },
+                    { off: false, content: "商品修改" },
+                    { off: false, content: "商品增加" },
+                    { off: false, content: "商品分类" },
+                ],
+                x: null,
+                idd: 0,
+                num: 0,
+                page: 1,
+                lu: {
+                    one: "商品管理",
+                    two: "商品列表"
+                },
+                show: false,
+                sortset: true,
+                add: {
+                    dis: false,
+                    name: ''
+                }
+
+            },
+            methods: {
+                open: function (index) {
+                    if (this.ind != index || (this.dat[index].set == "+")) {
+                        this.dat[this.ind].set = "+";
+                        this.dat[this.ind].off = false;
+                        $(".active1").slideUp(500);
+                        $(".list-group").eq(index).find(".active1").slideDown(500);
+                        this.dat[index].off = true;
+                        this.dat[index].set = "-";
+                        this.ind = index;
+                    } else {
+                        $(".active1").slideUp(500);
+                        this.dat[this.ind].set = "+";
+                        this.dat[this.ind].off = false;
+                    }
+
+                },
+                set: function (index) {
+                    this.goto(1);
+                    this.idd = index;
+                    this.x = this.mydata[index];
+                },
+                del: function (index, id) {
+                    $.get("del.php", { id: id }, function (data) {
+                        vm.num = Math.ceil(vm.mydata.length / 3);
+                        vm.dis = [];
+                        var a = (vm.page - 1) * 3;
+                        vm.mydata.splice(a + index);
+                        for (var i = a; i < a + 3; i++) {
+                            if (i < vm.mydata.length) {
+                                vm.dis.push(vm.mydata[i]);
+                            }
+                        }
+                        if (vm.dis.length == 0) {
+                            vm.num = Math.ceil(vm.mydata.length / 3);
+                            vm.page--;
+                            var a = (vm.page - 1) * 3;
+                            for (var i = a; i < a + 3; i++) {
+
+                                if (i < vm.mydata.length) {
+                                    vm.dis.push(vm.mydata[i]);
+                                }
+                            }
+                        }
+
+                    })
+
+
+                },
+                home: function (id) {
+                    this.goto(id);
+                },
+                sortid: function (num) {
+                    for (var i = 0 in vm.sort) {
+                        if (num == vm.sort[i].sort_id) {
+                            return vm.sort[i].sort_name;
+                        }
+                    }
+
+                },
+                back: function () {
+                    this.goto(0);
+                },
+                doSubmit: function (e) {
+                    e.preventDefault();
+                    return false;
+                },
+                ctrls: function () {
+                    $("#updata").ajaxSubmit(function (data) {
+                        vm.goto(0);
+                        vm.x.pic = data;
+                        vm.mydata[vm.idd] = vm.x;
+                    });
+
+                },
+                fen: function (index) {
+                    vm.dis = [];
+                    var a = (index - 1) * 3
+                    for (var i = a; i < a + 3; i++) {
+                        if (i < vm.mydata.length) {
+                            vm.dis.push(vm.mydata[i]);
+                        }
+                    }
+                    this.page = index;
+                },
+                prepage: function () {
+                    if (this.page > 1) {
+
+                        this.page--;
+                        vm.dis = [];
+                        var a = (vm.page - 1) * 3
+                        for (var i = a; i < a + 3; i++) {
+                            if (i < vm.mydata.length) {
+                                vm.dis.push(vm.mydata[i]);
+                            }
+                        }
+                    }
+                },
+                nextpage: function () {
+                    if (this.page < 5) {
+                        this.page++;
+                        vm.dis = [];
+                        var a = (vm.page - 1) * 3
+                        for (var i = a; i < a + 3; i++) {
+                            if (i < vm.mydata.length) {
+                                vm.dis.push(vm.mydata[i]);
+                            }
+                        }
+                    }
+
+                },
+                inset: function () {
+                    if ($("#file").val() == '') {
+                        alert("必须添加图片");
+                        return false;
+
+                    }
+                    $("#inset").ajaxSubmit(function (data) {
+                        vm.goto(0);
+                        vm.x.pic = data;
+                        vm.mydata.push(vm.x);
+                        vm.num = Math.ceil(vm.mydata.length / 3);
+                        vm.dis = [];
+                        var a = (vm.page - 1) * 3
+                        for (var i = a; i < a + 3; i++) {
+                            if (i < vm.mydata.length) {
+                                vm.dis.push(vm.mydata[i]);
+                            }
+                        }
+                    });
+                },
+                sortsetfun: function () {
+                    this.sortset = !this.sortset;
+                    $.post("list.php", { id: 2 }, function (data, textStatus) {
+                        if (textStatus == "success") {
+                            vm.sort = JSON.parse(data);
+
+                        }
+                    });
+                },
+                sortctrl: function () {
+                    $.post("sortinset.php", { sort: vm.sort }, function (data, textStatus) {
+                        if (textStatus == "success") {
+                            vm.sortset = !vm.sortset;
+
+
+                        }
+                    });
+                },
+                addfun: function () {
+                    this.add.dis = true;
+
+                },
+                addback: function () {
+                    this.add.dis = false;
+                },
+                addctrl: function (id) {
+                    this.add.dis = false;
+                    if (vm.add.name == '') {
+                        alert("分类名为空");
+                        return false;
+                    }
+                    $.get("insetsort.php", { id: id, name: vm.add.name }, function (data, textStatus) {
+                        if (textStatus == "success") {
+                            var a = {
+                                sort_id: id,
+                                sort_name: vm.add.name
+                            }
+                            vm.sort.push(a);
+
+                        }
+                    })
+                },
+                goto: function (j) {
+                    for (var i in vm.off) {
+                        vm.off[i].off = false;
+                    }
+                    this.off[j].off = true;
+                    this.lu.two = this.off[j].content;
+                }
+            },
+            created: function () {
+                //$(".active1").slideUp(0);
+
+                $.post("list.php", { id: 1 }, function (data, textStatus) {
+                    if (textStatus == "success") {
+                        vm.mydata = JSON.parse(data);
+                        vm.x = vm.mydata[0];
+                        // for(i in vm.x){
+                        //     vm.x[i]=''; 
+                        // }
+                        vm.num = Math.ceil(vm.mydata.length / 3);
+                        for (var i = 0; i < 3; i++) {
+                            vm.dis.push(vm.mydata[i]);
+                        }
+                    }
+                });
+
+                $.post("list.php", { id: 2 }, function (data, textStatus) {
+                    if (textStatus == "success") {
+
+                        vm.sort = JSON.parse(data);
+
+
+                    }
+                });
+
+            }
+        })
+    // var photo=document.getElementById("file");
+
+    // var mydiv = document.getElementById("mydiv");
+
+    // photo.onchange = function(){
+
+    //         var reader = new FileReader();
+
+    //         //文件读取完成后,事件触发[event]
+
+    //         reader.onload = function(){
+    //             mydiv.innerHTML=' ';
+
+    //                 var img_html = document.createElement('img');
+
+    //                 img_html.src = event.target.result; //图片的base64编码[string]
+    //                 //alert();
+    //                 //if(img_html.)
+    //                 //img_html.width = '200';
+
+
+    //                 mydiv.appendChild(img_html);
+    //                 if($("#mydiv").width()>$("#mydiv").height()){
+    //                     img_html.width = '200';
+    //                 }else{
+    //                     img_html.height = '200'; 
+    //                 }
+
+    //                 //console.log();
+    //         }
+
+    //         reader.readAsDataURL(this.files[0]); //读取文件对象[obj]
+    // }
+    </script>
+</body>
+
+</html>

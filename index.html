@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>标题</title>
+<!-- Bootstrap -->
+<link href="js/bootstrap.css" rel="stylesheet">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<!-- jQuery (necessary for Bootstrap"s JavaScript plugins) -->
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.js"></script>
+<style>
+    body{
+        background-image: url(1.jpg);
+        background-size: 1920px 1080px; 
+        transition: all 1s linear;
+    }
+    .body1{
+        width: 400px;
+        height: 500px;
+        background-color: rgba(255, 255, 255, .7);
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        margin-left:-200px;
+        border: 30px solid rgba(255, 255, 255,.1);
+    }
+    .form-control {
+        background-color: rgba(255, 255, 255, .8);
+    }
+    .input-group-addon{
+        background-color: rgba(255, 255, 255, .9);
+    }
+    .form-inline{
+        margin-top: 20px;
+    }
+    @media (min-width: 768px) {.form-inline .form-group {
+        display: inline-block;
+        margin-bottom: 30px;
+        vertical-align: middle;
+    }}
+    .logo{
+        width: 100px;
+        height: 100px;
+        margin: 30px auto;
+        background-image: url(logo2.png);
+        background-size: 100% 100%;
+    }
+    .form-inline{
+        padding-left: 20px;
+    }
+    .btn{
+        width: 100px;
+    }
+    .deng{
+        margin-left:60px;
+    }
+    .deng:nth-child(2){
+        
+        margin-top: -10px;
+    }
+
+</style>
+</head>
+<body>
+    <div class="body1">
+            <div class="logo"></div>
+            <form class="form-inline col-md-offset-1" action="deng.php" method="post">
+                    <div class="form-group">
+                      <label class="sr-only" for="exampleInputAmount">用户名</label>
+                      <div class="input-group">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
+                        <input type="text" class="form-control"  name="user" id="exampleInputAmount" placeholder="用户名">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="exampleInputAmount">用户名</label>
+                        <div class="input-group">
+                          <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
+                          <input type="text" class="form-control" name="pass" id="exampleInputAmount" placeholder="密码">
+                        </div>
+                      </div>
+                    <div class="form-group deng">
+                        <button class="btn btn-info" type="submit">登录</button>
+                    </div>
+                    <div class="form-group deng">
+                        <button class="btn btn-info">注册</button>
+                    </div>
+            </form>
+    </div>
+    <script>
+        $("body").height($(window).height());
+        $(window).resize(function(){
+            $("body").height($(window).height());
+        })
+        var off=true;
+        setInterval(function(){
+            if(off){
+                $("body").css("background-position","0 -20px");
+                off=false;
+            }else{
+                $("body").css("background-position","0 0px");
+                off=true;
+            }
+            
+        },1000);
+    </script>
+</body>
+</html>
